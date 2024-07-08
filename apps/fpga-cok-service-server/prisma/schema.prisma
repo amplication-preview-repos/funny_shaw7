@@ -1,0 +1,34 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Command {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  code        String?
+  description String?
+  timers      Timer[]
+}
+
+model Timer {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  interval  Int?
+  command   Command? @relation(fields: [commandId], references: [id])
+  commandId String?
+}
+
+model VoltageReading {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  timestamp DateTime?
+  value     Float?
+}
